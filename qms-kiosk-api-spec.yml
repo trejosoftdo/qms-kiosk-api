@@ -1,0 +1,2484 @@
+openapi: 3.0.3
+info:
+  title: Kiosk API
+  description: |-
+    Kiosk API OpenAPI 3.0 specification.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  termsOfService: http://trejosoft.com.do/terms/
+  contact:
+    email: administrator@trejosoft.com.do
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Kiosk API
+  url: http://trejosoft.com.do/kiosk-api/v1/
+servers:
+  - url: https://kiosk-api.trejosoft.com.do/api/v1/
+tags:
+  - name: statuses
+    description: Status related to each type of object 
+    externalDocs:
+      description: Find out more
+      url: http://trejosoft.com.do/kiosk-api/v1/statuses/
+  - name: priorities
+    description: Turn or queue priorities 
+    externalDocs:
+      description: Find out more
+      url: http://trejosoft.com.do/kiosk-api/v1/priorities/
+  - name: categories
+    description: Categories are higher-level classification or grouping of customers or visitors based on the nature or purpose of their visit.
+    externalDocs:
+      description: Find out more
+      url: http://trejosoft.com.do/kiosk-api/v1/categories/
+  - name: services
+    description: Services are specific assistance or task that a customer or visitor needs to be addressed at a service point (e.g., a service counter or desk).
+    externalDocs:
+      description: Find out more
+      url: http://trejosoft.com.do/kiosk-api/v1/services/
+  - name: customers
+    description: Customers are visitors served by service agent or service counter 
+    externalDocs:
+      description: Find out more
+      url: http://trejosoft.com.do/kiosk-api/v1/customers/
+  - name: appointments
+    description: Appointments are pre-scheduled or pre-arranged time when a customer is expected to visit a service location to receive a specific service. 
+    externalDocs:
+      description: Find out more
+      url: http://trejosoft.com.do/kiosk-api/v1/customerturns/
+  - name: serviceturns
+    description: Service turns are customer's or visitor's time to be served by a service agent or at a service counter on a specific.
+    externalDocs:
+      description: Find out more
+      url: http://trejosoft.com.do/kiosk-api/v1/customerturns/
+  - name: queues
+    description: Queues are sequence of customers or individuals waiting for a service or assistance.
+    externalDocs:
+      description: Find out more
+      url: http://trejosoft.com.do/kiosk-api/v1/queues/
+paths:
+  # -----------------------------------------------------------
+  # Statuses Endpoints
+  # -----------------------------------------------------------
+  /statuses:
+    get:
+      tags:
+        - statuses
+      summary: Get list of statuses
+      description: Get list of statuses
+      operationId: getStatusAll
+      parameters:
+        - $ref: "#/components/parameters/statusTypeParam"
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of statuses
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfStatuses"          
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+      security:
+        - KioskOAuth2:
+            - read_statuses
+            - admin_statuses
+    post:
+      tags:
+        - statuses
+      summary: Add a new status
+      description: Add a new status
+      operationId: addStatus
+      requestBody:
+        $ref: "#/components/requestBodies/Status"
+      responses:
+        "201":
+          description: OK - Status successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          #ERROR - Status already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_statuses
+            - admin_statuses
+  /statuses/{statusId}:
+    get:
+      tags:
+        - statuses
+      summary: Get info of an existing status
+      description: Get info of an existing status by Id
+      operationId: getStatus
+      parameters:
+        - name: statusId
+          in: path
+          description: ID of status to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - A record of Status information 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Status not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_statuses
+            - admin_statuses
+    put:
+      tags:
+        - statuses
+      summary: Update an existing status
+      description: Update an existing status by Id
+      operationId: updateStatus
+      parameters:
+        - name: statusId
+          in: path
+          description: ID of status to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: "#/components/requestBodies/Status"
+      responses:
+        "200":
+          description: OK - Status successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Status not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_statuses
+            - admin_statuses
+    patch:
+      tags:
+        - statuses
+      summary: Update partially an existing status
+      description: Update partially an existing status by Id
+      operationId: updatePartialStatus
+      parameters:
+        - name: statusId
+          in: path
+          description: ID of status to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update partially an existent status
+        content:
+          application/json:
+            schema:
+              type: object
+              anyOf:
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                - type: object
+                  properties:
+                    description:
+                      type: string
+                - type: object
+                  properties:
+                    type:
+                      $ref: "#/components/schemas/StatusType"
+                - type: object
+                  properties:
+                    isActive:
+                      type: boolean
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: OK - Status successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Status not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_statuses
+            - admin_statuses
+    delete:
+      tags:
+        - statuses
+      summary: Delete an existing status
+      description: Delete an existing status by Id
+      operationId: deleteStatus
+      parameters:
+        - name: statusId
+          in: path
+          description: ID of status to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - Status successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Status not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_statuses
+            - admin_statuses
+            
+  # -----------------------------------------------------------
+  # Priorities Endpoints
+  # -----------------------------------------------------------
+  /priorities:
+    get:
+      tags:
+        - priorities
+      summary: Get list of priorities
+      description: Get list of priorities
+      operationId: getPriorityAll
+      parameters:
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of priorities
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfPriorities"          
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+      security:
+        - KioskOAuth2:
+            - read_priorities
+            - admin_priorities
+    post:
+      tags:
+        - priorities
+      summary: Add a new priority
+      description: Add a new priority
+      operationId: addPriority
+      requestBody:
+        $ref: "#/components/requestBodies/Priority"
+      responses:
+        "201":
+          description: OK - Priority successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          #ERROR - Priority already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_priorities
+            - admin_priorities
+            
+  /priorities/{priorityId}:
+    get:
+      tags:
+        - priorities
+      summary: Get info of an existing priority
+      description: Get info of an existing priority by Id
+      operationId: getPriority
+      parameters:
+        - name: priorityId
+          in: path
+          description: ID of priority to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - A record of Priority information 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Priority"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Priority not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_priorities
+            - admin_priorities
+    put:
+      tags:
+        - priorities
+      summary: Update an existing priority
+      description: Update an existing priority by Id
+      operationId: updatePriority
+      parameters:
+        - name: priorityId
+          in: path
+          description: ID of priority to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: "#/components/requestBodies/Priority"
+      responses:
+        "200":
+          description: OK - Priority successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Priority not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_priorities
+            - admin_priorities
+    patch:
+      tags:
+        - priorities
+      summary: Update partially an existing priority
+      description: Update partially an existing priority by Id
+      operationId: updatePartialPriority
+      parameters:
+        - name: priorityId
+          in: path
+          description: ID of priority to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update partially an existent priority
+        content:
+          application/json:
+            schema:
+              type: object
+              anyOf:
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                - type: object
+                  properties:
+                    description:
+                      type: string
+                - type: object
+                  properties:
+                    isActive:
+                      type: boolean
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: OK - Priority successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Priority not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_priorities
+            - admin_priorities
+    delete:
+      tags:
+        - priorities
+      summary: Delete an existing priority
+      description: Delete an existing priority by Id
+      operationId: deletePriority
+      parameters:
+        - name: priorityId
+          in: path
+          description: ID of priority to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - Priority successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Priority not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_priorities
+            - admin_priorities
+            
+  # -----------------------------------------------------------
+  # Categories Endpoints
+  # -----------------------------------------------------------
+  /categories:
+    get:
+      tags:
+        - categories
+      summary: Get list of categories
+      description: Get list of categories
+      operationId: getCategoryAll
+      parameters:
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of categories
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfCategories"          
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+      security:
+        - KioskOAuth2:
+            - read_categories
+            - admin_categories
+    post:
+      tags:
+        - categories
+      summary: Add a new category
+      description: Add a new category
+      operationId: addCategory
+      requestBody:
+        $ref: "#/components/requestBodies/Category"
+      responses:
+        "201":
+          description: OK - Category successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          #ERROR - Category already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_categories
+            - admin_categories
+  /categories/{categoryId}:
+    get:
+      tags:
+        - categories
+      summary: Get info of an existing category
+      description: Get info of an existing category by Id
+      operationId: getCategory
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of category to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - A record of Category information 
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Category not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_categories
+            - admin_categories
+    put:
+      tags:
+        - categories
+      summary: Update an existing category
+      description: Update an existing category by Id
+      operationId: updateCategory
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of category to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: "#/components/requestBodies/Category"
+      responses:
+        "200":
+          description: OK - Category successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Category not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_categories
+            - admin_categories
+    patch:
+      tags:
+        - categories
+      summary: Update partially an existing category
+      description: Update partially an existing category by Id
+      operationId: updatePartialCategory
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of category to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update partially an existent category
+        content:
+          application/json:
+            schema:
+              type: object
+              anyOf:
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                - type: object
+                  properties:
+                    description:
+                      type: string
+                - type: object
+                  properties:
+                    iconUrl:
+                      type: string
+                - type: object
+                  properties:
+                    status:
+                      $ref: "#/components/schemas/Status"
+                - type: object
+                  properties:
+                    isActive:
+                      type: boolean
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: OK - Category successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Category not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_categories
+            - admin_categories
+    delete:
+      tags:
+        - categories
+      summary: Delete an existing category
+      description: Delete an existing category by Id
+      operationId: deleteCategory
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of category to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - Category successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Category not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_categories
+            - admin_categories
+  /categories/{categoryId}/services:
+    get:
+      tags:
+        - categories
+      summary: Get list of services of an existing category
+      description: Get list of services of an existing category by Id
+      operationId: getCategoryServices
+      parameters:
+        - name: categoryId
+          in: path
+          description: ID of category of the services to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of services that belongs to the category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfServices"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Category not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_categories
+            - admin_categories
+            
+  # -----------------------------------------------------------
+  # Services Endpoints
+  # -----------------------------------------------------------
+  /services:
+    get:
+      tags:
+        - services
+      summary: Get list of services
+      description: Get list of services
+      operationId: getServiceAll
+      parameters:
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of services
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfServices"
+      security:
+        - KioskOAuth2:
+            - read_services
+            - admin_services
+    post:
+      tags:
+        - services
+      summary: Add a new service
+      description: Add a new service
+      operationId: addService
+      requestBody:
+        $ref: "#/components/requestBodies/Service"
+      responses:
+        "201":
+          description: OK -Service successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          #ERROR - Service already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_services
+            - admin_services
+            
+  /services/{serviceId}:
+    get:
+      tags:
+        - services
+      summary: Get info of an existing service
+      description: Get info of an existing service by Id
+      operationId: getService
+      parameters:
+        - name: serviceId
+          in: path
+          description: ID of service to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - Service details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Service not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_services
+            - admin_services
+    put:
+      tags:
+        - services
+      summary: Update an existing service
+      description: Update an existing service by Id
+      operationId: updateService
+      parameters:
+        - name: serviceId
+          in: path
+          description: ID of service to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: "#/components/requestBodies/Service"
+      responses:
+        "200":
+          description: OK - Service successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Service not found
+          $ref: "#/components/responses/NotFound"
+        "409":
+          #ERROR - Service already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_services
+            - admin_services
+    patch:
+      tags:
+        - services
+      summary: Update partially an existing service
+      description: Update partially an existing service by Id
+      operationId: updatePartialService
+      parameters:
+        - name: serviceId
+          in: path
+          description: ID of service to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update partially an existent service
+        content:
+          application/json:
+            schema:
+              type: object
+              anyOf:
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                - type: object
+                  properties:
+                    description:
+                      type: string
+                - type: object
+                  properties:
+                    iconUrl:
+                      type: string
+                - type: object
+                  properties:
+                    prefix:
+                      type: string
+                - type: object
+                  properties:
+                    category:
+                      $ref: "#/components/schemas/Category"
+                - type: object
+                  properties:
+                    status:
+                      $ref: "#/components/schemas/Status"
+                - type: object
+                  properties:
+                    isActive:
+                      type: boolean
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: OK - Service updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Service not found
+          $ref: "#/components/responses/NotFound"
+        "409":
+          #ERROR - Service already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_services
+            - admin_services
+    delete:
+      tags:
+        - services
+      summary: Delete an existing service
+      description: Delete an existing service by Id
+      operationId: deleteService
+      parameters:
+        - name: serviceId
+          in: path
+          description: ID of service to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - Service successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Service not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_services
+            - admin_services
+            
+  /services/{serviceId}/serviceturns:
+    get:
+      tags:
+        - services
+      summary: Get list of turns of an existing service
+      description: Get info of an existing service by Id
+      operationId: getServiceTurns
+      parameters:
+        - name: serviceId
+          in: path
+          description: ID of service of the turns to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of turns related to teh service
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfServiceTurns"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Service not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_services
+            - admin_services
+
+  # -----------------------------------------------------------
+  # Customers Endpoints
+  # -----------------------------------------------------------
+  /customers:
+    get:
+      tags:
+        - customers
+      summary: Get list of customers
+      description: Get list of customers
+      operationId: getCustomerAll
+      parameters:
+        - $ref: "#/components/parameters/filterParam"
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of customers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfCustomers"
+      security:
+        - KioskOAuth2:
+            - read_customers
+            - admin_customers
+    post:
+      tags:
+        - customers
+      summary: Add a new customer
+      description: Add a new customer
+      operationId: addCustomer
+      requestBody:
+        $ref: "#/components/requestBodies/Customer"
+      responses:
+        "201":
+          description: OK - Customer successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          #ERROR - Customer already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_customers
+            - admin_customers
+            
+  /customers/{customerId}:
+    get:
+      tags:
+        - customers
+      summary: Get info of an existing customer
+      description: Get info of an existing customer by Id
+      operationId: getCustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - A record with Customer information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Customer not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_customers
+            - admin_customers
+    put:
+      tags:
+        - customers
+      summary: Update an existing customer
+      description: Update an existing customer by Id
+      operationId: updateCustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: "#/components/requestBodies/Customer"
+      responses:
+        "200":
+          description: OK - Customer successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Customer not found
+          $ref: "#/components/responses/NotFound"
+        "409":
+          #ERROR - Customer already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_customers
+            - admin_customers
+    patch:
+      tags:
+        - customers
+      summary: Update partially an existing customer
+      description: Update partially an existing customer by Id
+      operationId: updatePartialCustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update partially an existent customer
+        content:
+          application/json:
+            schema:
+              type: object
+              anyOf:
+                - type: object
+                  properties:
+                    firstName:
+                      type: string
+                - type: object
+                  properties:
+                    lastName:
+                      type: string
+                - type: object
+                  properties:
+                    gender:
+                      type: string
+                - type: object
+                  properties:
+                    yearOfBirth:
+                      type: integer
+                - type: object
+                  properties:
+                    email:
+                      type: string
+                      pattern: (^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)
+                - type: object
+                  properties:
+                    status:
+                      $ref: "#/components/schemas/Status"
+                - type: object
+                  properties:
+                    isActive:
+                      type: boolean
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: OK - Customer updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Customer not found
+          $ref: "#/components/responses/NotFound"
+        "409":
+          #ERROR - Customer already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_customers
+            - admin_customers
+    delete:
+      tags:
+        - customers
+      summary: Delete an existing customer
+      description: Delete an existing customer by Id
+      operationId: deletecustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - Customer successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - customer not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_customers
+            - admin_customers
+            
+  /customers/{customerId}/appointments:
+    get:
+      tags:
+        - customers
+      summary: Get list of appointments of an existing customer
+      description: Get list of appointments of an existing customer by customer Id
+      operationId: getCustomerAppointments
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer of the appointments to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - $ref: "#/components/parameters/filterParam"
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of appointments related to the customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfAppointments"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Customer not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_customers
+            - admin_customers
+
+  /customers/{customerId}/serviceturns:
+    get:
+      tags:
+        - customers
+      summary: Get list of turns of an existing customer
+      description: Get list of turns an existing customer by customer Id
+      operationId: getCustomerServiceTurns
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer of the turns to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - $ref: "#/components/parameters/filterParam"
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of service turns related to the customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfServiceTurns"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Customer not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_customers
+            - admin_customers
+            - read_serviceturns
+            - admin_serviceturns
+
+  # -----------------------------------------------------------
+  # Appointments Endpoints
+  # -----------------------------------------------------------
+  /appointments:
+    get:
+      tags:
+        - appointments
+      summary: Get list of appointments
+      description: Get list of appointments
+      operationId: getAppointmentAll
+      parameters:
+        - $ref: "#/components/parameters/filterParam"
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of appointments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfAppointments"
+      security:
+        - KioskOAuth2:
+            - read_appointments
+            - admin_appointments
+    post:
+      tags:
+        - appointments
+      summary: Add a new Appointment
+      description: Add a new Appointment
+      operationId: addAppointment
+      requestBody:
+        $ref: "#/components/requestBodies/Appointment"
+      responses:
+        "201":
+          description: OK - Appointment successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          #ERROR - Appointment already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_appointments
+            - admin_appointments
+            
+  /appointments/{appointmentId}:
+    get:
+      tags:
+        - appointments
+      summary: Get info of an existing appointment
+      description: Get info of an existing appointment by Id
+      operationId: getAppointment
+      parameters:
+        - name: appointmentId
+          in: path
+          description: ID of appointment to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - A record with appointment information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Appointment not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_appointments
+            - admin_appointments
+    put:
+      tags:
+        - appointments
+      summary: Update an existing appointment
+      description: Update an existing appointment by Id
+      operationId: updateAppointment
+      parameters:
+        - name: appointmentId
+          in: path
+          description: ID of appointment to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: "#/components/requestBodies/Appointment"
+      responses:
+        "200":
+          description: OK - Appointment successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Appointment not found
+          $ref: "#/components/responses/NotFound"
+        "409":
+          #ERROR - Appointment already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_appointments
+            - admin_appointments
+    patch:
+      tags:
+        - appointments
+      summary: Update partially an existing appointment
+      description: Update partially an existing appointment by Id
+      operationId: updatePartialAppointment
+      parameters:
+        - name: appointmentId
+          in: path
+          description: ID of appointment to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update partially an existent appointment
+        content:
+          application/json:
+            schema:
+              type: object
+              anyOf:
+                - type: object
+                  properties:
+                    customer:
+                      $ref: "#/components/schemas/Customer"
+                - type: object
+                  properties:
+                    status:
+                      $ref: "#/components/schemas/Status"
+                - type: object
+                  properties:
+                    serviceSchedStart:
+                      type: string
+                      format: date-time
+                - type: object
+                  properties:
+                    serviceSchedEndingExpected:
+                      type: string
+                      format: date-time
+                - type: object
+                  properties:
+                    serviceSchedEnded:
+                      type: string
+                      format: date-time
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: OK - Appointment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Appointment not found
+          $ref: "#/components/responses/NotFound"
+        "409":
+          #ERROR - Appointment already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_appointments
+            - admin_appointments
+    delete:
+      tags:
+        - appointments
+      summary: Delete an existing appointment
+      description: Delete an existing appointment by Id
+      operationId: deleteAppointment
+      parameters:
+        - name: appointmentId
+          in: path
+          description: ID of appointment to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - Appointment successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Appointment not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_appointments
+            - admin_appointments
+
+  # -----------------------------------------------------------
+  # ServiceTurns Endpoints
+  # -----------------------------------------------------------
+  /serviceturns:
+    get:
+      tags:
+        - serviceturns
+      summary: Get list of service turns
+      description: Get list of service turns
+      operationId: getServiceTurnAll
+      parameters:
+        - $ref: "#/components/parameters/filterParam"
+        - $ref: "#/components/parameters/onlyActiveParam" 
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/limitParam"
+      responses:
+        "200":
+          description: OK - List of service turns
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfServiceTurns"
+      security:
+        - KioskOAuth2:
+            - read_serviceturns
+            - admin_serviceturns
+    post:
+      tags:
+        - serviceturns
+      summary: Add a new service turn
+      description: Add a new service turn
+      operationId: addServiceTurn
+      requestBody:
+        $ref: "#/components/requestBodies/ServiceTurn"
+      responses:
+        "201":
+          description: OK - Service turn successfully created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          #ERROR - Service Turn already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_serviceturns
+            - admin_serviceturns
+            
+  /serviceturns/{serviceTurnId}:
+    get:
+      tags:
+        - serviceturns
+      summary: Get info of an existing service turn
+      description: Get info of an existing service turn by Id
+      operationId: getServiceTurn
+      parameters:
+        - name: serviceTurnId
+          in: path
+          description: ID of service turn to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - A record with service turn information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceTurn"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Service Turn not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - read_serviceturns
+            - admin_serviceturns
+    put:
+      tags:
+        - serviceturns
+      summary: Update an existing service turn
+      description: Update an existing service turn by Id
+      operationId: updateServiceTurn
+      parameters:
+        - name: serviceTurnId
+          in: path
+          description: ID of service turn to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: "#/components/requestBodies/ServiceTurn"
+      responses:
+        "200":
+          description: OK - Service Turn successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Service Turn not found
+          $ref: "#/components/responses/NotFound"
+        "409":
+          #ERROR - Service Turn already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_serviceturns
+            - admin_serviceturns
+    patch:
+      tags:
+        - serviceturns
+      summary: Update partially an existing service turn
+      description: Update partially an existing service turn by Id
+      operationId: updatePartialServiceTurn
+      parameters:
+        - name: serviceTurnId
+          in: path
+          description: ID of service turn to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update partially an existent service turn
+        content:
+          application/json:
+            schema:
+              type: object
+              anyOf:
+                - type: object
+                  properties:
+                    customer:
+                      $ref: "#/components/schemas/Customer"
+                - type: object
+                  properties:
+                    status:
+                      $ref: "#/components/schemas/Status"
+                - type: object
+                  properties:
+                    serviceSchedStart:
+                      type: string
+                      format: date-time
+                - type: object
+                  properties:
+                    serviceSchedEndingExpected:
+                      type: string
+                      format: date-time
+                - type: object
+                  properties:
+                    serviceSchedEnded:
+                      type: string
+                      format: date-time
+              additionalProperties: false
+        required: true
+      responses:
+        "200":
+          description: OK - Service Turn updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"          
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - ServiceTurn not found
+          $ref: "#/components/responses/NotFound"
+        "409":
+          #ERROR - ServiceTurn already exists
+          $ref: "#/components/responses/Conflict"
+      security:
+        - KioskOAuth2:
+            - write_serviceturns
+            - admin_serviceturns
+    delete:
+      tags:
+        - serviceturns
+      summary: Delete an existing service turn
+      description: Delete an existing service turn by Id
+      operationId: deleteServiceTurn
+      parameters:
+        - name: serviceTurnId
+          in: path
+          description: ID of service turn to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK - Service Turn successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          #ERROR - Invalid data or parameters
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          #ERROR - Unathorized
+          $ref: "#/components/responses/Unathorized"
+        "403":
+          #ERROR - Forbidden
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          #ERROR - Service Turn not found
+          $ref: "#/components/responses/NotFound"
+      security:
+        - KioskOAuth2:
+            - write_serviceturns
+            - admin_serviceturns
+
+# ====================================================================
+# Components
+# ====================================================================
+components:
+  
+  # Parameters
+  # ==========
+  parameters:
+    onlyActiveParam:
+      name: active
+      in: query
+      description: Flag to return only active records 
+      required: false
+      schema:
+        type: boolean
+        default: true
+    offsetParam:
+      name: offset
+      in: query
+      description: The number of items to skip before collecting the result set
+      required: false
+      schema:
+        type: integer
+        format: int64
+        minimum: 0
+        default: 0
+    limitParam:
+      name: limit
+      in: query
+      description: The number of items to return
+      required: false
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        default: 10
+    filterParam:
+      name: filter
+      in: query
+      description: URL encoded dynamic filter to use with any field or combination of fields. [Syntax] filter=[Encoded Filter]
+      required: false
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+        default: 10
+    statusTypeParam:
+      name: statusType
+      in: query
+      description: Status type to filter see StatusType schema enum
+      required: false
+      schema:
+        $ref: "#/components/schemas/StatusType"
+    
+        
+  # Schemas
+  # =======
+  schemas:
+    StatusType:
+      type: string
+      enum:
+        - category
+        - service
+        - customer
+        - turn
+        - queue
+    Status:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Out of Service
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+        type:
+          $ref: "#/components/schemas/StatusType"
+        isActive:
+          type: boolean
+          example: true
+      xml:
+        name: status
+    ArrayOfStatuses:
+       type: array
+       items:
+         anyOf:
+           - $ref: "#/components/schemas/Status"
+    Priority:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: High 
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+        weight:
+          type: integer
+          format: int64
+          example: 5
+        isActive:
+          type: boolean
+          example: true
+      xml:
+        name: priority
+    ArrayOfPriorities:
+       type: array
+       items:
+         anyOf:
+           - $ref: "#/components/schemas/Priority"
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Passport Services
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+        iconUrl:
+          type: string
+          example: http://trejosoft.com.do/assets/images/passport.png
+        status:
+          $ref: "#/components/schemas/Status"
+        isActive:
+          type: boolean
+          example: true
+      xml:
+        name: category
+    ArrayOfCategories:
+       type: array
+       items:
+         anyOf:
+           - $ref: "#/components/schemas/Category"
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: New Passport Application
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+        prefix:
+          type: string
+          example: PS-NPA
+        iconUrl:
+          type: string
+          example: http://trejosoft.com.do/assets/images/passport.png
+        category:
+          $ref: "#/components/schemas/Category"
+        status:
+          $ref: "#/components/schemas/Status"
+        isActive:
+          type: boolean
+          example: true
+      xml:
+        name: service
+    ArrayOfServices:
+       type: array
+       items:
+         anyOf:
+           - $ref: "#/components/schemas/Service"
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        gender:
+          type: string
+          enum: [M, F, N/S]
+        yearOfBirth:
+          type: integer
+          format: int64
+        email:
+          type: string
+          pattern: (^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)
+        status:
+          $ref: "#/components/schemas/Status"
+        created:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        createdBy:
+          type: string
+          example: SYSTEM
+        lastModifified:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        lastModifiedBy:
+          type: string
+          example: SYSTEM
+    ArrayOfCustomers:
+       type: array
+       items:
+         anyOf:
+           - $ref: "#/components/schemas/Customer"
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        customer:
+          $ref: "#/components/schemas/Customer"
+        service:
+          $ref: "#/components/schemas/Service"
+        status:
+          $ref: "#/components/schemas/Status"
+        serviceSchedStart:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        serviceSchedEndingExpected:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        serviceSchedEnded:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        created:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        createdBy:
+          type: string
+          example: SYSTEM
+        lastModifified:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        lastModifiedBy:
+          type: string
+          example: SYSTEM
+    ArrayOfAppointments:
+       type: array
+       items:
+         anyOf:
+           - $ref: "#/components/schemas/Appointment"
+    ServiceTurn:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        ticketNumber:
+          type: string
+          example: PS-NPA-00045
+        customer:
+          $ref: "#/components/schemas/Customer"
+        service:
+          $ref: "#/components/schemas/Service"
+        status:
+          $ref: "#/components/schemas/Status"
+        priority:
+          $ref: "#/components/schemas/Priority"
+        appointment:
+          $ref: "#/components/schemas/Appointment"
+        serviceStarted:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        serviceEndingExpected:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        serviceEnded:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        created:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        createdBy:
+          type: string
+          example: SYSTEM
+        lastModifified:
+          type: string
+          format: date-time
+          example: 2023-10-20T17:32:28Z
+        lastModifiedBy:
+          type: string
+          example: SYSTEM
+    ArrayOfServiceTurns:
+       type: array
+       items:
+         anyOf:
+           - $ref: "#/components/schemas/ServiceTurn"
+    Queue:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Passport Application
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+        status:
+          $ref: "#/components/schemas/Status"
+        priority:
+          $ref: "#/components/schemas/Priority"
+        isActive:
+          type: boolean
+      xml:
+        name: queue
+    ArrayOfQueues:
+       type: array
+       items:
+         anyOf:
+           - $ref: "#/components/schemas/Queue"
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: "##default"
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: "##default"
+        
+  # Request Bodies
+  # ==============
+  requestBodies:
+    Priority:
+      description: A JSON object containing priority information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Priority"
+      required: true
+    Status:
+      description: A JSON object containing status information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Status"
+      required: true
+    Category:
+      description: A JSON object containing category information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Category"
+      required: true
+    Service:
+      description: A JSON object containing service information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Service"
+      required: true
+    Customer:
+      description: A JSON object containing customer information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Customer"
+      required: true
+    Appointment:
+      description: A JSON object containing appoinment information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Appointment"
+      required: true
+    ServiceTurn:
+      description: A JSON object containing service turn information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ServiceTurn"
+      required: true
+    Queue:
+      description: A JSON object containing queue information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Queue"
+      required: true
+      
+  # Responses
+  # ==============
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    Unathorized:
+      description: Client is not authenticated against the API
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    MethodNotAllowed:
+      description: Request method is not supported for the requested resource
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    Forbidden:
+      description: Client doen"t have permission to request this resource
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    BadRequest:
+      description: Client is sending an incorrect format of API request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    Conflict:
+      description: Request could not be processed because of conflict in the current state of the resource
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    BadGateway:
+      description: Bad Gateway
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    ServiceUnavailable:
+      description: Service Unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    GatewayTimedOut:
+      description: Gateway Timed Out
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    NotImplemented:
+      description: Not Implemented
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+  securitySchemes:
+    KioskOAuth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://trejosoft.com.do/kiosk-api/v1/oauth/authorize
+          scopes:
+            read_statuses: Read status information
+            write_statuses: Create, modify and delete status information
+            admin_statuses: Administrate status information
+            read_priorities: Read priority information
+            write_priorities: Create, modify and delete priority information
+            admin_priorities: Administrate priority information
+            read_categories: Read category information
+            write_categories: Create, modify and delete category information
+            admin_categories: Administrate category information
+            read_services: Read service information
+            write_services: Create, modify and delete service information
+            admin_services: Administrate service information
+            read_customers: Read customer information
+            write_customers: Create, modify and delete customer information
+            admin_customers: Administrate customer information
+            read_appointments: Read customers' appointments information
+            write_appointments: Create, modify and delete customers' appointments information
+            admin_appointments: Administrate customers' appointments information
+            read_serviceturns: Read services turns information
+            write_serviceturns: Create, modify and delete services turns information
+            admin_serviceturns: Administrate services turns information
+            read_queues: Read queue information
+            write_queues: Create, modify and delete queue information
+            admin_queues: Administrate queue information
+    ApiKeyAuth:
+      type: apiKey
+      name: api_key
+      in: header
