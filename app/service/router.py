@@ -4,7 +4,7 @@ from . import models
 
 router = APIRouter()
 
-@router.post("/{serviceId}/serviceturns", tags=["services"], response_model = models.CreateServiceTurnResponse)
+@router.post("/{serviceId}/serviceturns", tags=["services"], operation_id = "createServiceTurn", response_model = models.CreateServiceTurnResponse)
 async def create_service_turn(
     serviceId: int,
     item: models.CreateServiceTurnPayload,

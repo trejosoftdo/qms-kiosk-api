@@ -4,7 +4,7 @@ from . import models
 
 router = APIRouter()
 
-@router.get("/", tags=["categories"], response_model = models.CategoriesListResponse)
+@router.get("/", tags=["categories"], operation_id = "getCategories", response_model = models.CategoriesListResponse)
 def get_categories(
     active: bool = True,
     offset: int = 0,
@@ -29,7 +29,7 @@ def get_categories(
         limit
     )
 
-@router.get("/{categoryId}/services", tags=["categories"], response_model = models.CategoryServicesListResponse)
+@router.get("/{categoryId}/services", tags=["categories"], operation_id = "getCategoryServices", response_model = models.CategoryServicesListResponse)
 def get_category_services(
     categoryId: int,
     active: bool = True,

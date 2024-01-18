@@ -4,7 +4,7 @@ from . import models
 
 router = APIRouter()
 
-@router.get("/device", tags=["auth"], response_model = models.AuthorizeDeviceResponse)
+@router.get("/device", tags=["auth"], operation_id = "authorizeDevice", response_model = models.AuthorizeDeviceResponse)
 def authorize_device(application: str = Header(..., convert_underscores = False)) -> models.AuthorizeDeviceResponse:
     """Authorize a device to an application in context
 
@@ -17,7 +17,7 @@ def authorize_device(application: str = Header(..., convert_underscores = False)
     return handlers.authorize_device(application)
 
 
-@router.post("/tokens", tags=["auth"], response_model = models.GetTokensResponse)
+@router.post("/tokens", tags=["auth"], operation_id = "getAuthTokens", response_model = models.GetTokensResponse)
 async def get_auth_tokens(item: models.GetTokensPayload, application: str = Header(..., convert_underscores = False)) -> models.GetTokensResponse:
     """Gets the authorization tokens for the given device code and application in context
     
