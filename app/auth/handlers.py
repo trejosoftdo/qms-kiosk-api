@@ -1,6 +1,6 @@
 from fastapi import HTTPException
-from . import auth_api
 from . import models
+from . import api
 
 
 def authorize_device(realm: str) -> models.AuthorizeDeviceResponseData:
@@ -12,7 +12,7 @@ def authorize_device(realm: str) -> models.AuthorizeDeviceResponseData:
   Returns:
       models.AuthorizeDeviceResponseData: Authorization information such as deviceCode, and userCode.
   """
-  response = auth_api.auth_device(realm)
+  response = api.auth_device(realm)
   data = response.json()
   return models.AuthorizeDeviceResponse(
     data = models.AuthorizeDeviceResponseData(
@@ -39,7 +39,7 @@ def get_auth_tokens(realm: str, device_code: str) -> models.GetTokensResponse:
   Returns:
       models.GetTokensResponse: The authorization tokens information
   """
-  response = auth_api.get_auth_tokens(realm, device_code)
+  response = api.get_auth_tokens(realm, device_code)
   data = response.json()
   
   if (response.status_code == 400):

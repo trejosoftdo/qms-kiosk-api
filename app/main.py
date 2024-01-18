@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from . import auth_handlers
-from . import models
+from .auth import router as authorize
+from .category import router as category
+from .service import router as service
+
 
 app = FastAPI(
     title = 'QMS Kiosk API',
@@ -11,40 +13,18 @@ app = FastAPI(
 )
 
 origins = [
-    "http://localhost",
-    "http://localhost:8081",
+    'http://localhost',
+    'http://localhost:8081',
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins = origins,
     allow_credentials = True,
-    allow_methods = ["*"],
-    allow_headers = ["*"],
+    allow_methods = ['*'],
+    allow_headers = ['*'],
 )
 
-@app.get("/auth/{realm}/device", tags=["auth"], response_model = models.AuthorizeDeviceResponse)
-def authorize_device(realm: str) -> models.AuthorizeDeviceResponse:
-    """Authorize a device to a realm in context
-
-    Args:
-        realm (str): The realm in context
-
-    Returns:
-        models.AuthorizeDeviceResponse: Authorization information such as deviceCode, and userCode.
-    """
-    return auth_handlers.authorize_device(realm)
-
-
-@app.post("/auth/{realm}/tokens", tags=["auth"], response_model = models.GetTokensResponse)
-async def get_auth_tokens(realm: str, item: models.GetTokensPayload) -> models.GetTokensResponse:
-    """Gets the authorization tokens for the given device code and realm in context
-    
-    Args:
-        realm (str): The realm in context
-        item (models.GetTokensPayload): The required payload
-
-    Returns:
-        models.GetTokensResponse: The authorization tokens information
-    """
-    return auth_handlers.get_auth_tokens(realm, item.deviceCode)
+app.include_router(authorize.router, prefix = '/api/v1/auth', tags=['auth'])
+app.include_router(category.router, prefix = '/api/v1/categories', tags=['categories'])
+app.include_router(service.router, prefix = '/api/v1/services', tags=['services'])
