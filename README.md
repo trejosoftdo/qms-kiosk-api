@@ -32,6 +32,7 @@ python -m venv venv
 ```bash
 venv\Scripts\activate
 ```
+
 - On Unix or MacOS:
 ```
 source venv/bin/activate
@@ -55,20 +56,20 @@ In order to run this project, you need to set up the following environment varia
   AUTH_API_BASE_URL=http://localhost:1234
   ```
 
-### `AUTH_API_CLIENT_ID`
+### `APP_CLIENT_ID`
 
-- **Description:** Client ID of the API for authentication.
+- **Description:** Client ID of the APP for authentication.
 - **Example:** 
   ```plaintext
-  AUTH_API_CLIENT_ID=test-client-id
+  APP_CLIENT_ID=test-client-id
   ```
 
-### `AUTH_API_CLIENT_SECRET`
+### `APP_CLIENT_SECRET`
 
-- **Description:** Client Secret of the API for authentication.
+- **Description:** Client Secret of the APP for authentication.
 - **Example:** 
   ```plaintext
-  AUTH_API_CLIENT_SECRET=test-client-secret
+  APP_CLIENT_SECRET=test-client-secret
   ```
 
 ## Running the Application

@@ -1,10 +1,20 @@
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Depends, Header
+from .. import helpers
+from .. import constants
+from .constants import TAGS, GET_CATEGORIES_OPERATION_ID, GET_CATEGORY_SERVICES_OPERATION_ID
 from . import handlers
 from . import models
 
+
 router = APIRouter()
 
-@router.get("/", tags=["categories"], operation_id = "getCategories", response_model = models.CategoriesListResponse)
+@router.get(
+    "/",
+    dependencies=[Depends(helpers.validate_token(constants.READ_CATEGORIES_SCOPE))],
+    tags = TAGS,
+    operation_id = GET_CATEGORIES_OPERATION_ID,
+    response_model = models.CategoriesListResponse
+)
 def get_categories(
     active: bool = True,
     offset: int = 0,
@@ -29,7 +39,13 @@ def get_categories(
         limit
     )
 
-@router.get("/{categoryId}/services", tags=["categories"], operation_id = "getCategoryServices", response_model = models.CategoryServicesListResponse)
+@router.get(
+    "/{categoryId}/services",
+    dependencies=[Depends(helpers.validate_token(constants.READ_SERVICES_SCOPE))],
+    tags = TAGS,
+    operation_id = GET_CATEGORY_SERVICES_OPERATION_ID,
+    response_model = models.CategoryServicesListResponse
+)
 def get_category_services(
     categoryId: int,
     active: bool = True,
