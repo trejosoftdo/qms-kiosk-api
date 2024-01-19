@@ -1,7 +1,7 @@
 from . import models
 
 
-async def create_service_turn(
+def create_service_turn(
     application: str,
     serviceId: int,
     item: models.CreateServiceTurnPayload
@@ -20,5 +20,5 @@ async def create_service_turn(
       id = 4,
       customerName = item.customerName,
       ticketNumber = 'PS-NPA-00045',
-      peopleInQueue = 12,
+      peopleInQueue = 12
     )

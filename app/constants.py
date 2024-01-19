@@ -1,0 +1,57 @@
+BEARER_PORTION = "Bearer "
+ACTIVE_PROPERTY = "active"
+SCOPE_PROPERTY = "scope"
+SCOPES_SEPARATOR = " "
+EMPTY_VALUE = ""
+
+
+# Device Token Auth
+READ_CATEGORIES_SCOPE = 'read_categories'
+READ_SERVICES_SCOPE = 'read_services'
+READ_SERVICE_TURNS_SCOPE = 'read_serviceturns'
+WRITE_SERVICE_TURNS_SCOPE = 'write_serviceturns'
+
+DEVICE_TOKEN_GRANT_TYPE = 'urn:ietf:params:oauth:grant-type:device_code'
+DEVICE_TOKEN_SCOPES = (
+  READ_CATEGORIES_SCOPE,
+  READ_SERVICES_SCOPE,
+  READ_SERVICE_TURNS_SCOPE,
+  WRITE_SERVICE_TURNS_SCOPE
+)
+
+# API Metadata
+API_TITLE = 'QMS Kiosk API'
+API_SUMMARY = 'API for QMS Kiosk App'
+API_DESCRIPTION = 'The API for the QMS Kiosk Application.'
+API_VERSION =  '1.0.0'
+
+# API routes prefixes
+AUTH_ROUTE_PREFIX = '/api/v1/auth'
+CATEGORIES_ROUTE_PREFIX = '/api/v1/categories'
+SERVICES_ROUTE_PREFIX = '/api/v1/services'
+
+# CORS
+ALLOWED_ORIGINS = [
+  'http://localhost',
+  'http://localhost:8081',
+]
+
+ALLOWED_METHODS = ['*']
+ALLOWED_HEADERS = ['*']
+
+
+# Environment names
+AUTH_API_BASE_URL_ENV_NAME = "AUTH_API_BASE_URL"
+APP_CLIENT_ID_ENV_NAME = "APP_CLIENT_ID"
+APP_CLIENT_SECRET_ENV_NAME = "APP_CLIENT_SECRET"
+
+# Errors
+INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error"
+INTERNAL_SERVER_ERROR_CODE = 500
+
+INVALID_TOKEN_ERROR_MESSAGE = "Invalid token"
+INVALID_TOKEN_ERROR_CODE = 401
+
+FORBIDDEN_ERROR_MESSAGE = "Forbidden"
+FORBIDDEN_ERROR_CODE = 403
+

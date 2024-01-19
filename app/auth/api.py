@@ -1,18 +1,17 @@
 import requests
 from urllib.parse import urlencode
 from .. import environment
+from .. import constants
 
 
 common_headers = {
   'Content-Type': 'application/x-www-form-urlencoded'
 }
 
-scopes = (
-  'read_categories',
-  'read_services',
-  'read_serviceturns',
-  'write_serviceturns'
-)
+common_payload = {
+  'client_id': environment.app_client_id,
+  'client_secret': environment.app_client_secret,
+}
 
 def auth_device(realm: str) -> requests.Response:
   """Authorizes a device to a realm in context via the auth API
@@ -25,9 +24,8 @@ def auth_device(realm: str) -> requests.Response:
   """
   auth_device_url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/auth/device"
   payload = urlencode({
-    'client_id': environment.auth_api_client_id,
-    'client_secret': environment.auth_api_client_secret,
-    'scope': ' '.join(scopes),
+    **common_payload,
+    'scope': constants.SCOPES_SEPARATOR.join(constants.DEVICE_TOKEN_SCOPES),
   })
   return requests.request('POST', auth_device_url, headers = common_headers, data = payload)
 
@@ -45,9 +43,8 @@ def get_auth_tokens(realm: str, device_code: str) -> requests.Response:
   get_auth_tokens_url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/token"
   payload = urlencode({
     'device_code': device_code,
-    'grant_type': 'urn:ietf:params:oauth:grant-type:device_code',
-    'client_id': environment.auth_api_client_id,
-    'client_secret': environment.auth_api_client_secret,
+    'grant_type': constants.DEVICE_TOKEN_GRANT_TYPE,
+    **common_payload,
   })
   return requests.request('POST', get_auth_tokens_url, headers = common_headers, data = payload)
 
@@ -65,8 +62,7 @@ def token_instrospect(realm: str, access_token: str) -> requests.Response:
   instrospect_token_url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/token/introspect"
   payload = urlencode({
     'token': access_token,
-    'client_id': environment.auth_api_client_id,
-    'client_secret': environment.auth_api_client_secret,
+    **common_payload,
   })
   return requests.request('POST', instrospect_token_url, headers = common_headers, data = payload)
 
