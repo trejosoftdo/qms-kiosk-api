@@ -12,6 +12,7 @@ READ_SERVICE_TURNS_SCOPE = 'read_serviceturns'
 WRITE_SERVICE_TURNS_SCOPE = 'write_serviceturns'
 
 DEVICE_TOKEN_GRANT_TYPE = 'urn:ietf:params:oauth:grant-type:device_code'
+REFRESH_TOKEN_GRANT_TYPE = 'refresh_token'
 DEVICE_TOKEN_SCOPES = (
   READ_CATEGORIES_SCOPE,
   READ_SERVICES_SCOPE,

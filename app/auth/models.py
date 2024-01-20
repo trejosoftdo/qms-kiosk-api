@@ -21,3 +21,13 @@ class GetTokensResponseData(BaseModel):
 
 class GetTokensResponse(BaseModel):
     data: GetTokensResponseData
+
+class GetNewAccessTokenPayload(BaseModel):
+    refreshToken: str
+
+class GetNewAccessTokenResponseData(BaseModel):
+    accessToken: str
+    expiresIn: int
+
+class GetNewAccessTokenResponse(BaseModel):
+    data: GetNewAccessTokenResponseData

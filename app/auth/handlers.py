@@ -20,7 +20,7 @@ def authorize_device(realm: str) -> models.AuthorizeDeviceResponseData:
       userCode = data.get('user_code'),
       expiresIn = data.get('expires_in'),
       interval = data.get('interval'),
-      verificationURI = data.get('verification_uri'),
+      verificationURI = data.get('verification_uri_complete'),
     )
   )
 
@@ -66,5 +66,47 @@ def get_auth_tokens(realm: str, device_code: str) -> models.GetTokensResponse:
       refreshToken = data.get('refresh_token'),
       expiresIn = data.get('expires_in'),
       refreshExpiresIn = data.get('refresh_expires_in'),
+    )
+  )
+
+def get_new_access_token(realm: str, refresh_token: str) -> models.GetNewAccessTokenResponse:
+  """Gets a new authorization token for the given refresh token and realm in context
+
+  Args:
+      realm (str): The realm in context
+      refresh_token (str): The refresh token
+
+  Raises:
+      HTTPException: When validation errors are encountered.
+      HTTPException: When unexpected errors are encountered
+
+  Returns:
+      models.GetNewAccessTokenResponse: The new access token data
+  """
+  response = api.get_new_access_token(realm, refresh_token)
+  data = response.json()
+  
+  if (response.status_code == 400):
+    raise HTTPException(
+      status_code = 400,
+      detail = {
+        'message': data.get('error_description'),
+        'code': data.get('error'),
+      },
+    )
+  
+  if response.status_code > 400:
+    raise HTTPException(
+      status_code = 500,
+      detail = {
+        'message': 'Unexpected error',
+        'code': 'INTERNAL_ERROR',
+      },
+    )
+
+  return models.GetNewAccessTokenResponse(
+    data = models.GetNewAccessTokenResponseData(
+      accessToken = data.get('access_token'),
+      expiresIn = data.get('expires_in'),
     )
   )

@@ -66,3 +66,21 @@ def token_instrospect(realm: str, access_token: str) -> requests.Response:
   })
   return requests.request('POST', instrospect_token_url, headers = common_headers, data = payload)
 
+
+def get_new_access_token(realm: str, refresh_token: str) -> requests.Response:
+  """Gets a new access token
+
+  Args:
+      realm (str): The realm in context
+      refresh_token (str): The refresh token
+
+  Returns:
+      requests.Response: The response from the auth API.
+  """
+  refresh_token_url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/token"
+  payload = urlencode({
+    'refresh_token': refresh_token,
+    'grant_type': constants.REFRESH_TOKEN_GRANT_TYPE,
+    **common_payload,
+  })
+  return requests.request('POST', refresh_token_url, headers = common_headers, data = payload)
