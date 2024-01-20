@@ -43,3 +43,21 @@ async def get_auth_tokens(item: models.GetTokensPayload, application: str = Head
     """
     return handlers.get_auth_tokens(application, item.deviceCode)
 
+@router.post(
+    "/token/refresh",
+    tags = constants.TAGS,
+    operation_id = constants.GET_NEW_ACCESS_TOKEN_OPERATION_ID,
+    response_model = models.GetNewAccessTokenResponse
+)
+async def get_new_access_token(item: models.GetNewAccessTokenPayload, application: str = Header(..., convert_underscores = False)) -> models.GetNewAccessTokenResponse:
+    """Gets a new access token for the given refresh token and application in context
+    
+    Args:
+        application (str, optional): The application in context. Defaults to Header(..., convert_underscores = False).
+        item (models.GetNewAccessTokenPayload): The required payload
+
+    Returns:
+        models.GetNewAccessTokenResponse: The new access token information
+    """
+    return handlers.get_new_access_token(application, item.refreshToken)
+
