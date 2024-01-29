@@ -71,7 +71,7 @@ def validate_token(application: str, authorization: str, expected_scope: str) ->
   validate_token_url = f"{environment.auth_api_base_url}/api/v1/auth/token/validate"
   payload = {
     **common_payload,
-    'expectedScope': 'expected_scope',
+    'expectedScope': expected_scope,
   }
   headers = {
     **common_headers,
