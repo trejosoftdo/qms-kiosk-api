@@ -72,6 +72,14 @@ In order to run this project, you need to set up the following environment varia
   APP_CLIENT_SECRET=test-client-secret
   ```
 
+### `IAM_API_KEY`
+
+- **Description:** API key to be able to consume the IAM API
+- **Example:** 
+  ```plaintext
+  IAM_API_KEY=test-iam-api-key
+  ```
+
 ## Running the Application
 Run the FastAPI application using Uvicorn:
 ```bash
