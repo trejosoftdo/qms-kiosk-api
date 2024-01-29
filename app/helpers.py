@@ -29,11 +29,10 @@ def validate_token(expected_scope: str):
     is_authorized = False
 
     try:
-      response = api.token_instrospect(application, authorization.replace(constants.BEARER_PORTION, constants.EMPTY_VALUE))
-      data = response.json()
-      is_valid = data.get(constants.ACTIVE_PROPERTY) == True
-      scopes = data.get(constants.SCOPE_PROPERTY, constants.EMPTY_VALUE).split(constants.SCOPES_SEPARATOR)
-      is_authorized = expected_scope in scopes
+      response = api.validate_token(application, authorization, expected_scope)
+      data = response.json().get('data', {})
+      is_valid = data.get(constants.IS_VALID_PROPERTY) == True
+      is_authorized = data.get(constants.IS_AUTHORIZED_PROPERTY) == True
     except:
       raise exceptions.INTERNAL_SERVER_ERROR
 

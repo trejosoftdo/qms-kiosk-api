@@ -5,82 +5,99 @@ from .. import constants
 
 
 common_headers = {
-  'Content-Type': 'application/x-www-form-urlencoded'
+  'Content-Type': 'application/json',
+  'api_key': environment.iam_api_key,
 }
 
 common_payload = {
-  'client_id': environment.app_client_id,
-  'client_secret': environment.app_client_secret,
+  'clientId': environment.app_client_id,
+  'clientSecret': environment.app_client_secret,
 }
 
-def auth_device(realm: str) -> requests.Response:
-  """Authorizes a device to a realm in context via the auth API
+def auth_device(application: str) -> requests.Response:
+  """Authorizes a device to a application in context via the auth API
 
   Args:
-      realm (str): The realm in context
+      application (str): The application in context
 
   Returns:
       requests.Response: The response from the auth API.
   """
-  auth_device_url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/auth/device"
-  payload = urlencode({
+  auth_device_url = f"{environment.auth_api_base_url}/api/v1/auth/device"
+  payload = {
     **common_payload,
     'scope': constants.SCOPES_SEPARATOR.join(constants.DEVICE_TOKEN_SCOPES),
-  })
-  return requests.request('POST', auth_device_url, headers = common_headers, data = payload)
+  }
+  headers = {
+    **common_headers,
+    'application': application
+  }
+  return requests.request('POST', auth_device_url, headers = headers, json = payload)
 
 
-def get_auth_tokens(realm: str, device_code: str) -> requests.Response:
-  """Gets the authorization tokens for the given device code and realm in context
+def get_auth_tokens(application: str, device_code: str) -> requests.Response:
+  """Gets the authorization tokens for the given device code and application in context
 
   Args:
-      realm (str): The realm in context
+      application (str): The application in context
       device_code (str): The code of the device to authorize
 
   Returns:
       requests.Response: The response from the auth API.
   """
-  get_auth_tokens_url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/token"
-  payload = urlencode({
-    'device_code': device_code,
-    'grant_type': constants.DEVICE_TOKEN_GRANT_TYPE,
+  get_auth_tokens_url = f"{environment.auth_api_base_url}/api/v1/auth/tokens"
+  payload = {
     **common_payload,
-  })
-  return requests.request('POST', get_auth_tokens_url, headers = common_headers, data = payload)
+    'deviceCode': device_code,
+  }
+  headers = {
+    **common_headers,
+    'application': application
+  }
+  return requests.request('POST', get_auth_tokens_url, headers = headers, json = payload)
 
 
-def token_instrospect(realm: str, access_token: str) -> requests.Response:
+def validate_token(application: str, authorization: str, expected_scope: str) -> requests.Response:
   """Gets information such as scope and active from the given token
 
   Args:
-      realm (str): The realm in context
-      access_token (str): The token to instrospect
+      application (str): The application in context
+      authorization (str): The access token to validate
+      expected_scope (str): The expected scope
 
   Returns:
       requests.Response: The response from the auth API.
   """
-  instrospect_token_url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/token/introspect"
-  payload = urlencode({
-    'token': access_token,
+  validate_token_url = f"{environment.auth_api_base_url}/api/v1/auth/token/validate"
+  payload = {
     **common_payload,
-  })
-  return requests.request('POST', instrospect_token_url, headers = common_headers, data = payload)
+    'expectedScope': 'expected_scope',
+  }
+  headers = {
+    **common_headers,
+    'application': application,
+    'authorization': authorization, 
+  }
+  return requests.request('POST', validate_token_url, headers = headers, json = payload)
 
 
-def get_new_access_token(realm: str, refresh_token: str) -> requests.Response:
+def get_new_access_token(application: str, refresh_token: str) -> requests.Response:
   """Gets a new access token
 
   Args:
-      realm (str): The realm in context
+      application (str): The application in context
       refresh_token (str): The refresh token
 
   Returns:
       requests.Response: The response from the auth API.
   """
-  refresh_token_url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/token"
-  payload = urlencode({
-    'refresh_token': refresh_token,
-    'grant_type': constants.REFRESH_TOKEN_GRANT_TYPE,
+  refresh_token_url = f"{environment.auth_api_base_url}/api/v1/auth/token/refresh"
+  payload = {
     **common_payload,
-  })
-  return requests.request('POST', refresh_token_url, headers = common_headers, data = payload)
+    'refreshToken': refresh_token,
+  }
+  headers = {
+    **common_headers,
+    'application': application
+  }
+  return requests.request('POST', refresh_token_url, headers = headers, json = payload)
