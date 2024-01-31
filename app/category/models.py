@@ -26,6 +26,24 @@ class CategoryService(BaseModel):
     category: Category
     isActive: bool
 
+class ListParams(BaseModel):
+    active: bool
+    offset: int
+    limit: int
+
+class CommonHeaders(BaseModel):
+    authorization: str
+    application: str
+
+class GetCategoriesRequest(BaseModel):
+    headers: CommonHeaders
+    params: ListParams
+
+class GetCategoryServicesRequest(BaseModel):
+    headers: CommonHeaders
+    params: ListParams
+    categoryId: int
+
 CategoriesListResponse = List[Category]
 CategoryServicesListResponse = List[CategoryService]
 

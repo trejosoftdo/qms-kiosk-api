@@ -1,24 +1,15 @@
 from . import models
+from . import api
+from . import mappers
 
-
-def create_service_turn(
-    application: str,
-    serviceId: int,
-    item: models.CreateServiceTurnPayload
-) -> models.CreateServiceTurnResponse:
+def create_service_turn(request: models.CreateServiceTurnRequest) -> models.CreateServiceTurnResponse:
     """Creates a service turn for the given service
     
     Args:
-        application (str, optional): The application in context.
-        serviceId (int): ID of service to create a turn from
-        item (models.CreateServiceTurnPayload): The required payload
+        request (models.CreateServiceTurnRequest): Request for creating the service turn
 
     Returns:
         models.CreateServiceTurnResponse: Created service turn
     """
-    return models.CreateServiceTurnResponse(
-      id = 4,
-      customerName = item.customerName,
-      ticketNumber = 'PS-NPA-00045',
-      peopleInQueue = 12
-    )
+    response = api.create_service_turn(request)
+    return mappers.map_service_turn(response.json())

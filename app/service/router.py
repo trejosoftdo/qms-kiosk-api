@@ -17,17 +17,27 @@ router = APIRouter()
 )
 def create_service_turn(
     serviceId: int,
-    item: models.CreateServiceTurnPayload,
-    application: str = Header(..., convert_underscores = False)
+    payload: models.CreateServiceTurnPayload,
+    application: str = Header(..., convert_underscores = False),
+    authorization: str = Header(..., convert_underscores = False)
 ) -> models.CreateServiceTurnResponse:
     """Creates a service turn for the given service
     
     Args:
         serviceId (int): ID of service to create a turn from
-        item (models.CreateServiceTurnPayload): The required payload
+        payload (models.CreateServiceTurnPayload): The required payload
         application (str, optional): The application in context.
+        authorization (str, optional): The access token for the user in context
         
     Returns:
         models.CreateServiceTurnResponse: Basic information of the created service turn
     """
-    return handlers.create_service_turn(application, serviceId, item)
+    request = models.CreateServiceTurnRequest(
+        headers = models.CommonHeaders(
+            application = application,
+            authorization = authorization
+        ),
+        payload = payload,
+        serviceId = serviceId,
+    )
+    return handlers.create_service_turn(request)
