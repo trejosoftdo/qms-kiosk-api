@@ -20,4 +20,4 @@ jobs:
         pip install -q --no-cache-dir --upgrade -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py') --extension-pkg-whitelist='pydantic
+        pylint $(git ls-files '*.py') --extension-pkg-whitelist='pydantic'
