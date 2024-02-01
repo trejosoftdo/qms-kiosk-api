@@ -1,3 +1,6 @@
+"""Service API constants
+"""
+
 TAGS = ["services"]
 
 # Operation Ids

@@ -1,3 +1,6 @@
+"""Category API constants
+"""
+
 TAGS = ["categories"]
 
 # Operation Ids
