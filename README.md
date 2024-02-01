@@ -1,5 +1,6 @@
 # QMS Kiosk API
 [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
+![Build Status](https://github.com/trejosoftdo/qms-kiosk-api/actions/workflows/pylint.yml/badge.svg)
 
 
 ## Table of Contents
