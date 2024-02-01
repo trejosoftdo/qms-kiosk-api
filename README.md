@@ -80,6 +80,22 @@ In order to run this project, you need to set up the following environment varia
   IAM_API_KEY=test-iam-api-key
   ```
 
+### `CORE_API_KEY`
+
+- **Description:** API key to be able to consume the Core API
+- **Example:** 
+  ```plaintext
+  CORE_API_KEY=test-core-api-key
+  ```
+
+### `CORE_API_BASE_URL`
+
+- **Description:** Base url of the core API.
+- **Example:** 
+  ```plaintext
+  CORE_API_BASE_URL=http://localhost:5432
+  ```
+
 ## Running the Application
 Run the FastAPI application using Uvicorn:
 ```bash
