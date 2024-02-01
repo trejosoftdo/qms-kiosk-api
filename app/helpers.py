@@ -1,45 +1,49 @@
-from fastapi import Header, HTTPException
+"""General helpers
+"""
+
+from fastapi import Header
 from .auth import api
 from . import constants
 from . import exceptions
 
 
 def validate_token(expected_scope: str):
-  """Validates the authorization token checking its valididy and scopes
-
-  Args:
-      expected_scope (str): The expected scope
-  """
-  def _validate(
-    application: str = Header(..., convert_underscores = False),
-    authorization: str = Header(..., convert_underscores = False),
-  ):
-    """Token validation internal function
+    """Validates the authorization token checking its valididy and scopes
 
     Args:
-        application (str, optional): Application id
-        authorization (str, optional): Authorization token
-
-    Raises:
-        HTTPException: Internal server error when something unexpected happens.
-        HTTPException: Authorization error when token is invalidd.
-        HTTPException: Forbidden error when the lacking the expected scope.
+        expected_scope (str): The expected scope
     """
-    is_valid = False
-    is_authorized = False
 
-    try:
-      response = api.validate_token(application, authorization, expected_scope)
-      data = response.json().get('data', {})
-      is_valid = data.get(constants.IS_VALID_PROPERTY) == True
-      is_authorized = data.get(constants.IS_AUTHORIZED_PROPERTY) == True
-    except:
-      raise exceptions.INTERNAL_SERVER_ERROR
+    def _validate(
+        application: str = Header(..., convert_underscores=False),
+        authorization: str = Header(..., convert_underscores=False),
+    ):
+        """Token validation internal function
 
-    if not is_valid:
-      raise exceptions.INVALID_TOKEN_ERROR
+        Args:
+            application (str, optional): Application id
+            authorization (str, optional): Authorization token
 
-    if not is_authorized:
-      raise exceptions.FORBIDDEN_ERROR
+        Raises:
+            HTTPException: Internal server error when something unexpected happens.
+            HTTPException: Authorization error when token is invalidd.
+            HTTPException: Forbidden error when the lacking the expected scope.
+        """
+        is_valid = False
+        is_authorized = False
 
-  return _validate
+        try:
+            response = api.validate_token(application, authorization, expected_scope)
+            data = response.json().get("data", {})
+            is_valid = data.get(constants.IS_VALID_PROPERTY) is True
+            is_authorized = data.get(constants.IS_AUTHORIZED_PROPERTY) is True
+        except Exception as exc:
+            raise exceptions.INTERNAL_SERVER_ERROR from exc
+
+        if not is_valid:
+            raise exceptions.INVALID_TOKEN_ERROR
+
+        if not is_authorized:
+            raise exceptions.FORBIDDEN_ERROR
+
+    return _validate

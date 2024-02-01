@@ -1,5 +1,8 @@
-from dotenv import load_dotenv
+"""Project environment variables
+"""
+
 import os
+from dotenv import load_dotenv
 from . import constants
 
 load_dotenv()

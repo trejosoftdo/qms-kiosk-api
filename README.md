@@ -7,6 +7,7 @@
 - [Environment Variables](#environment-variables)
 - [Running the Application](#running-the-application)
 - [API Documentation](#api-documentation)
+- [Linting](#linting)
 - [Testing](#testing)
 
 ## Overview
@@ -106,6 +107,13 @@ The API will be accessible at http://localhost:5000.
 
 ## API Documentation
 Swagger UI: http://127.0.0.1:5000/docs
+
+## Linting
+Run the linting on the code using:
+
+```bash
+pylint ./app  --extension-pkg-whitelist='pydantic'
+```
 
 ## Testing
 Run the test suite using:
