@@ -1,6 +1,6 @@
 # QMS Kiosk API
 [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
-![Build Status](https://github.com/trejosoftdo/qms-kiosk-api/actions/workflows/pylint.yml/badge.svg)
+![Build Status](https://github.com/trejosoftdo/qms-kiosk-api/actions/workflows/build.yml/badge.svg)
 
 
 ## Table of Contents
@@ -119,8 +119,9 @@ pylint ./app  --extension-pkg-whitelist='pydantic'
 ```
 
 ## Testing
-Run the test suite using:
+Run the unit tests using:
 
 ```bash
-pytest
+cd app
+nosetests
 ```
