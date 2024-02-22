@@ -54,10 +54,9 @@ def get_auth_tokens(application: str, device_code: str) -> models.GetTokensRespo
     response = api.get_auth_tokens(application, device_code)
 
     if response.status_code == 400:
-        detail = response.json().get("detail", {})
         raise HTTPException(
             status_code=400,
-            detail=detail,
+            detail=response.json(),
         )
 
     if response.status_code > 400:
@@ -93,10 +92,9 @@ def get_new_access_token(
     response = api.get_new_access_token(application, refresh_token)
 
     if response.status_code == 400:
-        detail = response.json().get("detail", {})
         raise HTTPException(
             status_code=400,
-            detail=detail,
+            detail=response.json(),
         )
 
     if response.status_code > 400:
