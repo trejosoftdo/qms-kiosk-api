@@ -11,6 +11,7 @@ from .service import router as service
 from . import constants
 from . import exceptions
 
+# pylint: disable=W0613
 
 app = FastAPI(
     title=constants.API_TITLE,

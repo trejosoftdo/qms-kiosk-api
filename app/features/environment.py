@@ -66,6 +66,12 @@ def setup_payloads(context, *args, **kwargs):
             "VALID": {},
             "INVALID": {},
         },
+        constants.SERVICE_TURNS_SAMPLE_PATH: {
+            "VALID": {
+                "customerName": "John Doe",
+            },
+            "INVALID": {},
+        },
     }
 
 

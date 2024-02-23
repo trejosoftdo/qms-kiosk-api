@@ -3,7 +3,7 @@ Feature: Refresh tokens endpoint
     As a consumer, I want an endpoint able to get renew tokens
 
     Background:
-      Given a device and user code have been obtained
+      Given a device and user code have been obtained for scope "read_categories"
       And the device has been authorized
       And access token has been obtained
       And a request url "/api/v1/auth/token/refresh"

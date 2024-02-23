@@ -6,7 +6,6 @@ from . import constants
 from . import models
 
 
-
 INTERNAL_SERVER_ERROR = HTTPException(
     status_code=constants.INTERNAL_SERVER_ERROR_CODE,
     detail=constants.INTERNAL_SERVER_ERROR_MESSAGE,

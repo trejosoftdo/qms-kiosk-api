@@ -17,7 +17,7 @@ common_payload = {
 }
 
 
-def auth_device(application: str) -> requests.Response:
+def auth_device(application: str, scopes = constants.DEVICE_TOKEN_SCOPES) -> requests.Response:
     """Authorizes a device to a application in context via the auth API
 
     Args:
@@ -29,7 +29,7 @@ def auth_device(application: str) -> requests.Response:
     auth_device_url = f"{environment.auth_api_base_url}/api/v1/auth/device"
     payload = {
         **common_payload,
-        "scope": constants.SCOPES_SEPARATOR.join(constants.DEVICE_TOKEN_SCOPES),
+        "scope": constants.SCOPES_SEPARATOR.join(scopes),
     }
     headers = {**common_headers, "application": application}
     return requests.post(

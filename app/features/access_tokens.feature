@@ -3,7 +3,7 @@ Feature: Access tokens endpoint
     As a consumer, I want an endpoint able to get access tokens for devices
 
     Background:
-      Given a device and user code have been obtained
+      Given a device and user code have been obtained for scope "read_categories"
       And a request url "/api/v1/auth/tokens"
 
 

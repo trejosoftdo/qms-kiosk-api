@@ -7,6 +7,7 @@ from fastapi import status
 from selenium.webdriver.common.by import By
 from behave import given
 from app.features import constants
+from app.auth.api import auth_device
 
 
 def should_login(driver):
@@ -52,17 +53,15 @@ def approve(driver):
     time.sleep(2)
 
 
-@given("a device and user code have been obtained")
-def step_obtain_device_and_user_code(context):
+@given(u'a device and user code have been obtained for scope "{feature}"')
+def step_obtain_device_and_user_code(context, feature):
     """Obtains the device and user code
 
     Args:
         context (Any): Test context
+        feature (str): expected scope
     """
-    response = context.client.get(
-        constants.AUTH_DEVICE_PATH,
-        headers=context.common_headers,
-    )
+    response = auth_device(context.common_headers['application'], [feature])
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     context.data = data["data"]

@@ -3,6 +3,7 @@
 # pylint: disable=E0611
 
 import re
+from urllib.parse import urlencode
 from fastapi import status
 from behave import given, when, then
 
@@ -20,7 +21,12 @@ def find(data, path):
     keys = path.split(".")
     result = data
     for key in keys:
-        result = result[key]
+        prop = key
+
+        if key.startswith("["):
+            prop = int(prop.replace("[", "").replace("]", ""))
+
+        result = result[prop]
     return result
 
 
@@ -45,6 +51,7 @@ def step_set_payload_name(context, payload_name):
     """
     context.payload = context.payloads[context.path][payload_name]
 
+
 @given('"{name}" header is "{value}"')
 def step_set_header_value(context, name, value):
     """Sets the a header value
@@ -60,9 +67,24 @@ def step_set_header_value(context, name, value):
     context.headers[name] = value
 
 
+@given('the request query param "{name}" to "{value}"')
+def step_set_query_param_value(context, name, value):
+    """Sets the a query param value
+
+    Args:
+        context (Any): Test context
+        name (string): header name
+        value (string): header value
+    """
+    if not hasattr(context, "query"):
+        setattr(context, "query", {})
+
+    context.query[name] = value
+
+
 @when('the request sends "{method}"')
 def step_send_request(context, method):
-    """Send a request to the path in context 
+    """Send a request to the path in context
        using the chosen payload as body
 
     Args:
@@ -77,8 +99,10 @@ def step_send_request(context, method):
     if not hasattr(context, "payload"):
         setattr(context, "payload", {})
 
+    query = getattr(context, "query", None)
+    query_string = urlencode(query) if query is not None else ""
     context.response = func(
-        context.path,
+        f"{context.path}?{query_string}",
         json=getattr(context, "payload", {}),
         headers={**context.common_headers, **context.headers},
     )
@@ -109,6 +133,17 @@ def step_check_response_property(context, property_path, value):
     """
     data = context.response.json()
     assert str(find(data, property_path)) == value
+
+
+@then('the response total of items is equal to "{total}"')
+def step_check_response_items_total(context, total):
+    """Checks the total of items returned
+
+    Args:
+        context (Any): Test context
+        total (string): expected total
+    """
+    assert len(context.response.json()) == int(total)
 
 
 @then('the response property "{property_path}" matches regular expression "{pattern}"')

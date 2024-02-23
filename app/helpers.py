@@ -1,10 +1,31 @@
 """General helpers
 """
 
-from fastapi import Header
+from fastapi import Header, status, HTTPException
+from requests import Response
 from .auth import api
 from . import constants
 from . import exceptions
+
+
+def handle_error_response(response: Response) -> None:
+    """Handles error responses
+
+    Args:
+        response (Response): The API response
+
+    Raises:
+        HTTPException(status_code=400): validation error
+        HTTPException(status_code=500): Internal server error
+    """
+    if response.status_code == status.HTTP_400_BAD_REQUEST:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=response.json(),
+        )
+
+    if response.status_code > status.HTTP_400_BAD_REQUEST:
+        raise exceptions.INTERNAL_SERVER_ERROR
 
 
 def validate_token(expected_scope: str):

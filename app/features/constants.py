@@ -15,6 +15,7 @@ AUTH_DEVICE_PATH = "/api/v1/auth/device"
 AUTH_TOKENS_PATH = "/api/v1/auth/tokens"
 AUTH_REFRESH_TOKEN_PATH = "/api/v1/auth/token/refresh"
 AUTH_VALIDATE_TOKEN_PATH = "/api/v1/auth/token/validate"
+SERVICE_TURNS_SAMPLE_PATH = "/api/v1/services/1/serviceturns"
 
 # Driver options
 DRIVER_HEADLESS_MODE_OPTION = "--headless"
