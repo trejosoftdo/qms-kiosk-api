@@ -53,7 +53,7 @@ def approve(driver):
     time.sleep(2)
 
 
-@given(u'a device and user code have been obtained for scope "{feature}"')
+@given('a device and user code have been obtained for scope "{feature}"')
 def step_obtain_device_and_user_code(context, feature):
     """Obtains the device and user code
 
