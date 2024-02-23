@@ -1,17 +1,9 @@
 """Auth API handlers
 """
 
-from fastapi import HTTPException
+from .. import helpers
 from . import models
 from . import api
-
-INTERNAL_ERROR = HTTPException(
-    status_code=500,
-    detail={
-        "message": "Unexpected error",
-        "code": "INTERNAL_ERROR",
-    },
-)
 
 
 def authorize_device(application: str) -> models.AuthorizeDeviceResponseData:
@@ -25,6 +17,9 @@ def authorize_device(application: str) -> models.AuthorizeDeviceResponseData:
         and userCode.
     """
     response = api.auth_device(application)
+
+    helpers.handle_error_response(response)
+
     data = response.json().get("data", {})
     return models.AuthorizeDeviceResponse(
         data=models.AuthorizeDeviceResponseData(
@@ -53,15 +48,7 @@ def get_auth_tokens(application: str, device_code: str) -> models.GetTokensRespo
     """
     response = api.get_auth_tokens(application, device_code)
 
-    if response.status_code == 400:
-        detail = response.json().get("detail", {})
-        raise HTTPException(
-            status_code=400,
-            detail=detail,
-        )
-
-    if response.status_code > 400:
-        raise INTERNAL_ERROR
+    helpers.handle_error_response(response)
 
     data = response.json().get("data", {})
     return models.GetTokensResponse(
@@ -92,15 +79,7 @@ def get_new_access_token(
     """
     response = api.get_new_access_token(application, refresh_token)
 
-    if response.status_code == 400:
-        detail = response.json().get("detail", {})
-        raise HTTPException(
-            status_code=400,
-            detail=detail,
-        )
-
-    if response.status_code > 400:
-        raise INTERNAL_ERROR
+    helpers.handle_error_response(response)
 
     data = response.json().get("data", {})
     return models.GetNewAccessTokenResponse(

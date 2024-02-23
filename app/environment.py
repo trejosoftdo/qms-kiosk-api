@@ -13,3 +13,7 @@ app_client_secret = os.getenv(constants.APP_CLIENT_SECRET_ENV_NAME)
 iam_api_key = os.getenv(constants.IAM_API_KEY_ENV_NAME)
 core_api_key = os.getenv(constants.CORE_API_KEY_ENV_NAME)
 core_api_base_url = os.getenv(constants.CORE_API_BASE_URL_ENV_NAME)
+
+test_auth_application = os.getenv(constants.TEST_AUTH_APPLICATION_ENV_NAME)
+test_auth_username = os.getenv(constants.TEST_AUTH_USERNAME_ENV_NAME)
+test_auth_password = os.getenv(constants.TEST_AUTH_PASSWORD_ENV_NAME)
