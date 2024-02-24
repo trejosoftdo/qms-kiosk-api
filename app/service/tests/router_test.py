@@ -7,8 +7,13 @@ from requests import Response
 from fastapi import status
 from fastapi.testclient import TestClient
 from app import main, constants
-from app.service.tests.fakes import CreateServiceTurnResponseFactory, CreateServiceTurnPayloadFactory
+from app.service.tests.fakes import (
+    CreateServiceTurnResponseFactory,
+    CreateServiceTurnPayloadFactory,
+)
 
+
+# pylint: disable=R0801
 
 class RouterTest(unittest.TestCase):
     """Service Router functions tests"""

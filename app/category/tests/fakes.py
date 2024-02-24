@@ -1,3 +1,5 @@
+"""Category fakes"""
+
 from pydantic_factories import ModelFactory
 from app.category.models import (
     GetCategoriesRequest,

@@ -56,8 +56,9 @@ def get_category_services(
     Returns:
         models.CategoryServicesListResponse: The list of services for the category
     """
+    base_path = f"{environment.core_api_base_url}{CATEGORIES_EXTERNAL_PATH}"
     services_url = (
-        f"{environment.core_api_base_url}{CATEGORIES_EXTERNAL_PATH}{req.categoryId}{SERVICES_EXTERNAL_PATH}"
+        f"{base_path}{req.categoryId}{SERVICES_EXTERNAL_PATH}"
     )
     params = {
         "active": req.params.active,

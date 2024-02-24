@@ -3,7 +3,7 @@
 
 import unittest
 from unittest.mock import Mock, patch
-from fakes import CreateServiceTurnRequestFactory
+from app.service.tests.fakes import CreateServiceTurnRequestFactory
 from app.constants import (
     TIMEOUT,
     CONTENT_TYPE_JSON,

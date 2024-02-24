@@ -12,7 +12,6 @@ from app.constants import (
     CONTENT_TYPE_JSON,
 )
 from app.category.api import get_categories, get_category_services
-
 from app.category.constants import CATEGORIES_EXTERNAL_PATH, SERVICES_EXTERNAL_PATH
 
 
@@ -74,8 +73,9 @@ class CategoryAPITest(unittest.TestCase):
         request = GetCategoryServicesRequestFactory.build()
         response = get_category_services(request)
         self.assertEqual(response, get_mock.return_value)
+        base_path = f"{self.base_path}{CATEGORIES_EXTERNAL_PATH}{request.categoryId}"
         get_mock.assert_called_with(
-            f"{self.base_path}{CATEGORIES_EXTERNAL_PATH}{request.categoryId}{SERVICES_EXTERNAL_PATH}",
+            f"{base_path}{SERVICES_EXTERNAL_PATH}",
             headers={
                 **self.common_headers,
                 "application": request.headers.application,

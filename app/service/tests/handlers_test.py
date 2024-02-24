@@ -5,9 +5,11 @@ import unittest
 from unittest.mock import Mock, patch
 from fastapi import status
 from requests import Response
-from fakes import CreateServiceTurnRequestFactory, CreateServiceTurnResponseFactory
+from app.service.tests.fakes import (
+    CreateServiceTurnRequestFactory,
+    CreateServiceTurnResponseFactory,
+)
 from app.service.handlers import create_service_turn
-
 
 
 class HandlersTest(unittest.TestCase):

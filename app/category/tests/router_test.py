@@ -11,6 +11,8 @@ from app.category.constants import CATEGORIES_PATH
 from app.category.tests.fakes import CategoryFactory, CategoryServiceFactory
 
 
+# pylint: disable=R0801
+
 class RouterTest(unittest.TestCase):
     """Category Router functions tests"""
 

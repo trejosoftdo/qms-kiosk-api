@@ -3,7 +3,6 @@
 
 import unittest
 from unittest.mock import Mock, patch
-from urllib.parse import urlencode
 from app.constants import (
     TIMEOUT,
     CONTENT_TYPE_JSON,
@@ -15,7 +14,7 @@ from app.auth.api import (
     validate_token,
     get_new_access_token,
 )
-from app.auth import models, constants as paths
+from app.auth import constants as paths
 
 
 BASE_URL = "http://base-url.test"
