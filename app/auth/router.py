@@ -11,7 +11,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/device",
+    constants.DEVICE_ROUTE_PATH,
     tags=constants.TAGS,
     operation_id=constants.AUTHORIZE_DEVICE_OPERATION_ID,
     response_model=models.AuthorizeDeviceResponse,
@@ -31,7 +31,7 @@ def authorize_device(
 
 
 @router.post(
-    "/tokens",
+    constants.TOKENS_ROUTE_PATH,
     tags=constants.TAGS,
     operation_id=constants.GET_AUTH_TOKENS_OPERATION_ID,
     response_model=models.GetTokensResponse,
@@ -53,7 +53,7 @@ async def get_auth_tokens(
 
 
 @router.post(
-    "/token/refresh",
+    constants.TOKEN_REFRESH_PATH,
     tags=constants.TAGS,
     operation_id=constants.GET_NEW_ACCESS_TOKEN_OPERATION_ID,
     response_model=models.GetNewAccessTokenResponse,
