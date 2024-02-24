@@ -11,7 +11,6 @@ from .service import router as service
 from . import constants
 from . import exceptions
 
-# pylint: disable=W0613
 
 app = FastAPI(
     title=constants.API_TITLE,
@@ -29,11 +28,11 @@ app.add_middleware(
 )
 
 @app.exception_handler(HTTPException)
-def http_exception_handler(request: Request, exc: HTTPException):
+def http_exception_handler(_: Request, exc: HTTPException):
     """Handles HTTP exceptions
 
     Args:
-        request (Request): HTTP Request
+        _ (Request): HTTP Request
         exc (HTTPException): HTTP Exception
 
     Returns:
@@ -46,11 +45,11 @@ def http_exception_handler(request: Request, exc: HTTPException):
 
 
 @app.exception_handler(RequestValidationError)
-def request_validation_error_handler(request: Request, exc: RequestValidationError):
+def request_validation_error_handler(_: Request, exc: RequestValidationError):
     """Request validation error handler
 
     Args:
-        request (Request): HTTP Request
+        _ (Request): HTTP Request
         exc (RequestValidationError): Request validation error
 
     Returns:
