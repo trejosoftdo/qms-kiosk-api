@@ -7,6 +7,7 @@ from fastapi import status, HTTPException
 from requests import Response
 from app.helpers import handle_error_response, validate_token
 
+# pylint: disable=R0801
 
 class HelpersTest(unittest.TestCase):
     """Helpers functions tests"""
