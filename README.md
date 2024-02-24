@@ -47,6 +47,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+5. Run the setup file:
+```
+./setup.sh
+```
 
 ## Environment Variables
 
@@ -100,10 +104,34 @@ In order to run this project, you need to set up the following environment varia
   CORE_API_BASE_URL=http://localhost:5432
   ```
 
+### `TEST_AUTH_APPLICATION`
+
+- **Description:** Auth API application for testing
+- **Example:** 
+  ```plaintext
+  TEST_AUTH_APPLICATION=test-auth-application
+  ```
+
+### `TEST_AUTH_USERNAME`
+
+- **Description:** Auth API user name for testing
+- **Example:** 
+  ```plaintext
+  TEST_AUTH_USERNAME=test-auth-username
+  ```
+
+### `TEST_AUTH_PASSWORD`
+
+- **Description:** Auth API user password for testing
+- **Example:** 
+  ```plaintext
+  TEST_AUTH_PASSWORD=test-auth-password
+  ```
+
 ## Running the Application
-Run the FastAPI application using Uvicorn:
+Run the FastAPI application:
 ```bash
-uvicorn main:app --reload
+make start
 ```
 
 The API will be accessible at http://localhost:5000.
@@ -115,13 +143,18 @@ Swagger UI: http://127.0.0.1:5000/docs
 Run the linting on the code using:
 
 ```bash
-pylint ./app  --extension-pkg-whitelist='pydantic'
+make lint
 ```
 
 ## Testing
 Run the unit tests using:
 
 ```bash
-cd app
-nosetests
+make unit-tests
+```
+
+Run the integration tests using:
+
+```bash
+make integration-tests
 ```
