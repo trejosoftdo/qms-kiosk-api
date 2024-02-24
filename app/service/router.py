@@ -3,7 +3,7 @@
 
 from fastapi import APIRouter, Depends, Header
 from .. import constants
-from .constants import TAGS, CREATE_SERVICE_TURN_OPERATION_ID
+from .constants import TAGS, CREATE_SERVICE_TURN_OPERATION_ID, SERVICE_TURNS_PATH
 from .. import helpers
 from . import handlers
 from . import models
@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/{service_id}/serviceturns",
+    SERVICE_TURNS_PATH,
     dependencies=[Depends(helpers.validate_token(constants.WRITE_SERVICE_TURNS_SCOPE))],
     tags=TAGS,
     operation_id=CREATE_SERVICE_TURN_OPERATION_ID,

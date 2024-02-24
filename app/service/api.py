@@ -5,12 +5,19 @@ import requests
 from .. import environment
 from .. import constants
 from . import models
+from .constants import SERVICES_EXTERNAL_PATH, TURNS_EXTERNAL_PATH
 
 
-common_headers = {
-    "Content-Type": "application/json",
-    "api_key": environment.core_api_key,
-}
+def get_common_headers() -> dict:
+    """Gets the common headers
+
+    Returns:
+        dict: common headers data
+    """
+    return {
+        "Content-Type": "application/json",
+        "api_key": environment.core_api_key,
+    }
 
 
 def create_service_turn(request: models.CreateServiceTurnRequest) -> requests.Response:
@@ -22,9 +29,9 @@ def create_service_turn(request: models.CreateServiceTurnRequest) -> requests.Re
     Returns:
         requests.Response: The response from the core api.
     """
-    url = f"{environment.core_api_base_url}/api/v1/services/{request.serviceId}/serviceturns"
+    url = f"{environment.core_api_base_url}{SERVICES_EXTERNAL_PATH}{request.serviceId}{TURNS_EXTERNAL_PATH}"
     headers = {
-        **common_headers,
+        **get_common_headers(),
         "application": request.headers.application,
         "authorization": request.headers.authorization,
     }
