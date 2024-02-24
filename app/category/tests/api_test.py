@@ -14,6 +14,7 @@ from app.constants import (
 from app.category.api import get_categories, get_category_services
 from app.category.constants import CATEGORIES_EXTERNAL_PATH, SERVICES_EXTERNAL_PATH
 
+# pylint: disable=R0801
 
 BASE_URL = "http://base-url.test"
 TEST_API_KEY = "test-api-key"

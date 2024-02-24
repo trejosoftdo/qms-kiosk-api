@@ -11,6 +11,7 @@ from app.constants import (
 from app.service.api import create_service_turn
 from app.service.constants import SERVICES_EXTERNAL_PATH, TURNS_EXTERNAL_PATH
 
+# pylint: disable=R0801
 
 BASE_URL = "http://base-url.test"
 TEST_API_KEY = "test-api-key"
