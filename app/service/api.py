@@ -29,7 +29,8 @@ def create_service_turn(request: models.CreateServiceTurnRequest) -> requests.Re
     Returns:
         requests.Response: The response from the core api.
     """
-    url = f"{environment.core_api_base_url}{SERVICES_EXTERNAL_PATH}{request.serviceId}{TURNS_EXTERNAL_PATH}"
+    base_path = f"{environment.core_api_base_url}{SERVICES_EXTERNAL_PATH}"
+    url = f"{base_path}{request.serviceId}{TURNS_EXTERNAL_PATH}"
     headers = {
         **get_common_headers(),
         "application": request.headers.application,

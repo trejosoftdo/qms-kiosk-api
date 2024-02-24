@@ -5,12 +5,19 @@ import requests
 from .. import environment
 from .. import constants
 from . import models
+from .constants import CATEGORIES_EXTERNAL_PATH, SERVICES_EXTERNAL_PATH
 
 
-common_headers = {
-    "Content-Type": "application/json",
-    "api_key": environment.core_api_key,
-}
+def get_common_headers() -> dict:
+    """Gets the request common headers
+
+    Returns:
+        dict: common headers
+    """
+    return {
+        "Content-Type": constants.CONTENT_TYPE_JSON,
+        "api_key": environment.core_api_key,
+    }
 
 
 def get_categories(req: models.GetCategoriesRequest) -> requests.Response:
@@ -22,14 +29,14 @@ def get_categories(req: models.GetCategoriesRequest) -> requests.Response:
     Returns:
         requests.Response: The response from the core api.
     """
-    categories_url = f"{environment.core_api_base_url}/api/v1/categories"
+    categories_url = f"{environment.core_api_base_url}{CATEGORIES_EXTERNAL_PATH}"
     params = {
         "active": req.params.active,
         "offset": req.params.offset,
         "limit": req.params.limit,
     }
     headers = {
-        **common_headers,
+        **get_common_headers(),
         "application": req.headers.application,
         "authorization": req.headers.authorization,
     }
@@ -50,7 +57,7 @@ def get_category_services(
         models.CategoryServicesListResponse: The list of services for the category
     """
     services_url = (
-        f"{environment.core_api_base_url}/api/v1/categories/{req.categoryId}/services"
+        f"{environment.core_api_base_url}{CATEGORIES_EXTERNAL_PATH}{req.categoryId}{SERVICES_EXTERNAL_PATH}"
     )
     params = {
         "active": req.params.active,
@@ -58,7 +65,7 @@ def get_category_services(
         "limit": req.params.limit,
     }
     headers = {
-        **common_headers,
+        **get_common_headers(),
         "application": req.headers.application,
         "authorization": req.headers.authorization,
     }
