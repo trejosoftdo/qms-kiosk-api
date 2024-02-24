@@ -7,7 +7,7 @@ from requests import Response
 from fastapi import status
 from fastapi.testclient import TestClient
 from app import main, constants
-from fakes import CreateServiceTurnResponseFactory, CreateServiceTurnPayloadFactory
+from app.service.tests.fakes import CreateServiceTurnResponseFactory, CreateServiceTurnPayloadFactory
 
 
 class RouterTest(unittest.TestCase):

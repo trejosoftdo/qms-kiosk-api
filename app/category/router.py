@@ -8,6 +8,8 @@ from .constants import (
     TAGS,
     GET_CATEGORIES_OPERATION_ID,
     GET_CATEGORY_SERVICES_OPERATION_ID,
+    CATEGORY_SERVICES_PATH,
+    CATEGORIES_PATH,
 )
 from . import handlers
 from . import models
@@ -17,7 +19,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/",
+    CATEGORIES_PATH,
     dependencies=[Depends(helpers.validate_token(constants.READ_CATEGORIES_SCOPE))],
     tags=TAGS,
     operation_id=GET_CATEGORIES_OPERATION_ID,
@@ -56,7 +58,7 @@ def get_categories(
 
 
 @router.get(
-    "/{category_id}/services",
+    CATEGORY_SERVICES_PATH,
     dependencies=[Depends(helpers.validate_token(constants.READ_SERVICES_SCOPE))],
     tags=TAGS,
     operation_id=GET_CATEGORY_SERVICES_OPERATION_ID,
