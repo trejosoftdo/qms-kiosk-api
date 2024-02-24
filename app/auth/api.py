@@ -4,20 +4,41 @@
 import requests
 from .. import environment
 from .. import constants
+from .constants import (
+    AUTH_DEVICE_EXTERNAL_PATH,
+    AUTH_TOKENS_EXTERNAL_PATH,
+    AUTH_TOKEN_VALIDATE_EXTERNAL_PATH,
+    AUTH_TOKEN_REFRESH_EXTERNAL_PATH,
+)
 
 
-common_headers = {
-    "Content-Type": "application/json",
-    "api_key": environment.iam_api_key,
-}
+def get_common_headers() -> dict:
+    """Gets the request common headers
 
-common_payload = {
-    "clientId": environment.app_client_id,
-    "clientSecret": environment.app_client_secret,
-}
+    Returns:
+        dict: Common headers
+    """
+    return {
+        "Content-Type": constants.CONTENT_TYPE_JSON,
+        "api_key": environment.iam_api_key,
+    }
 
 
-def auth_device(application: str, scopes = constants.DEVICE_TOKEN_SCOPES) -> requests.Response:
+def get_common_payload() -> dict:
+    """Gets the request common payload
+
+    Returns:
+        dict: Common payload
+    """
+    return {
+        "clientId": environment.app_client_id,
+        "clientSecret": environment.app_client_secret,
+    }
+
+
+def auth_device(
+    application: str, scopes=constants.DEVICE_TOKEN_SCOPES
+) -> requests.Response:
     """Authorizes a device to a application in context via the auth API
 
     Args:
@@ -26,17 +47,14 @@ def auth_device(application: str, scopes = constants.DEVICE_TOKEN_SCOPES) -> req
     Returns:
         requests.Response: The response from the auth API.
     """
-    auth_device_url = f"{environment.auth_api_base_url}/api/v1/auth/device"
+    auth_device_url = f"{environment.auth_api_base_url}{AUTH_DEVICE_EXTERNAL_PATH}"
     payload = {
-        **common_payload,
+        **get_common_payload(),
         "scope": constants.SCOPES_SEPARATOR.join(scopes),
     }
-    headers = {**common_headers, "application": application}
+    headers = {**get_common_headers(), "application": application}
     return requests.post(
-        auth_device_url,
-        headers=headers,
-        json=payload,
-        timeout=constants.TIMEOUT
+        auth_device_url, headers=headers, json=payload, timeout=constants.TIMEOUT
     )
 
 
@@ -50,17 +68,14 @@ def get_auth_tokens(application: str, device_code: str) -> requests.Response:
     Returns:
         requests.Response: The response from the auth API.
     """
-    get_auth_tokens_url = f"{environment.auth_api_base_url}/api/v1/auth/tokens"
+    get_auth_tokens_url = f"{environment.auth_api_base_url}{AUTH_TOKENS_EXTERNAL_PATH}"
     payload = {
-        **common_payload,
+        **get_common_payload(),
         "deviceCode": device_code,
     }
-    headers = {**common_headers, "application": application}
+    headers = {**get_common_headers(), "application": application}
     return requests.post(
-        get_auth_tokens_url,
-        headers=headers,
-        json=payload,
-        timeout=constants.TIMEOUT
+        get_auth_tokens_url, headers=headers, json=payload, timeout=constants.TIMEOUT
     )
 
 
@@ -77,21 +92,20 @@ def validate_token(
     Returns:
         requests.Response: The response from the auth API.
     """
-    validate_token_url = f"{environment.auth_api_base_url}/api/v1/auth/token/validate"
+    validate_token_url = (
+        f"{environment.auth_api_base_url}{AUTH_TOKEN_VALIDATE_EXTERNAL_PATH}"
+    )
     payload = {
-        **common_payload,
+        **get_common_payload(),
         "expectedScope": expected_scope,
     }
     headers = {
-        **common_headers,
+        **get_common_headers(),
         "application": application,
         "authorization": authorization,
     }
     return requests.post(
-        validate_token_url,
-        headers=headers,
-        json=payload,
-        timeout=constants.TIMEOUT
+        validate_token_url, headers=headers, json=payload, timeout=constants.TIMEOUT
     )
 
 
@@ -105,15 +119,14 @@ def get_new_access_token(application: str, refresh_token: str) -> requests.Respo
     Returns:
         requests.Response: The response from the auth API.
     """
-    refresh_token_url = f"{environment.auth_api_base_url}/api/v1/auth/token/refresh"
+    refresh_token_url = (
+        f"{environment.auth_api_base_url}{AUTH_TOKEN_REFRESH_EXTERNAL_PATH}"
+    )
     payload = {
-        **common_payload,
+        **get_common_payload(),
         "refreshToken": refresh_token,
     }
-    headers = {**common_headers, "application": application}
+    headers = {**get_common_headers(), "application": application}
     return requests.post(
-        refresh_token_url,
-        headers=headers,
-        json=payload,
-        timeout=constants.TIMEOUT
+        refresh_token_url, headers=headers, json=payload, timeout=constants.TIMEOUT
     )

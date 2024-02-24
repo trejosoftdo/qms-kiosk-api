@@ -9,6 +9,8 @@ SCOPES_SEPARATOR = " "
 EMPTY_VALUE = ""
 TIMEOUT = 10
 
+CONTENT_TYPE_JSON = "application/json"
+
 
 # Device Token Auth
 READ_CATEGORIES_SCOPE = "read_categories"
