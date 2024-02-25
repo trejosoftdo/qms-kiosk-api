@@ -3,6 +3,7 @@
 
 from fastapi import APIRouter, Depends, Header
 from .. import constants
+from .. import responses
 from .constants import TAGS, CREATE_SERVICE_TURN_OPERATION_ID, SERVICE_TURNS_PATH
 from .. import helpers
 from . import handlers
@@ -17,6 +18,7 @@ router = APIRouter()
     tags=TAGS,
     operation_id=CREATE_SERVICE_TURN_OPERATION_ID,
     response_model=models.CreateServiceTurnResponse,
+    responses=responses.responses_descriptions,
 )
 def create_service_turn(
     service_id: int,

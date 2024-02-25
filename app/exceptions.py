@@ -7,18 +7,39 @@ from . import models
 
 
 INTERNAL_SERVER_ERROR = HTTPException(
-    status_code=constants.INTERNAL_SERVER_ERROR_CODE,
-    detail=constants.INTERNAL_SERVER_ERROR_MESSAGE,
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail=models.APIResponse(
+        message=constants.INTERNAL_SERVER_ERROR_MESSAGE,
+        code=constants.INTERNAL_SERVER_ERROR_CODE,
+        type=constants.INTERNAL_ERROR_TYPE,
+    ).dict(),
 )
 
 INVALID_TOKEN_ERROR = HTTPException(
-    status_code=constants.INVALID_TOKEN_ERROR_CODE,
-    detail=constants.INVALID_TOKEN_ERROR_MESSAGE,
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail=models.APIResponse(
+        message=constants.INVALID_TOKEN_ERROR_MESSAGE,
+        code=constants.INVALID_TOKEN_ERROR_CODE,
+        type=constants.AUTHORIZATION_ERROR_TYPE,
+    ).dict(),
 )
 
 FORBIDDEN_ERROR = HTTPException(
-    status_code=constants.FORBIDDEN_ERROR_CODE,
-    detail=constants.FORBIDDEN_ERROR_MESSAGE,
+    status_code=status.HTTP_403_FORBIDDEN,
+    detail=models.APIResponse(
+        message=constants.FORBIDDEN_ERROR_MESSAGE,
+        code=constants.FORBIDDEN_ERROR_CODE,
+        type=constants.AUTHORIZATION_ERROR_TYPE,
+    ).dict(),
+)
+
+UNAUTHORIZED_ERROR = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail=models.APIResponse(
+        message=constants.UNAUTHORIZED_ERROR_MESSAGE,
+        code=constants.UNAUTHORIZED_ERROR_CODE,
+        type=constants.AUTHORIZATION_ERROR_TYPE,
+    ).dict(),
 )
 
 
