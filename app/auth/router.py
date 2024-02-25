@@ -2,6 +2,7 @@
 """
 
 from fastapi import APIRouter, Header
+from .. import responses
 from . import handlers
 from . import models
 from . import constants
@@ -15,6 +16,7 @@ router = APIRouter()
     tags=constants.TAGS,
     operation_id=constants.AUTHORIZE_DEVICE_OPERATION_ID,
     response_model=models.AuthorizeDeviceResponse,
+    responses=responses.responses_descriptions,
 )
 def authorize_device(
     application: str = Header(..., convert_underscores=False)
@@ -35,6 +37,7 @@ def authorize_device(
     tags=constants.TAGS,
     operation_id=constants.GET_AUTH_TOKENS_OPERATION_ID,
     response_model=models.GetTokensResponse,
+    responses=responses.responses_descriptions,
 )
 async def get_auth_tokens(
     item: models.GetTokensPayload,
@@ -57,6 +60,7 @@ async def get_auth_tokens(
     tags=constants.TAGS,
     operation_id=constants.GET_NEW_ACCESS_TOKEN_OPERATION_ID,
     response_model=models.GetNewAccessTokenResponse,
+    responses=responses.responses_descriptions,
 )
 async def get_new_access_token(
     item: models.GetNewAccessTokenPayload,

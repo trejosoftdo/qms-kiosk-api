@@ -4,6 +4,7 @@
 from fastapi import APIRouter, Depends, Header
 from .. import helpers
 from .. import constants
+from .. import responses
 from .constants import (
     TAGS,
     GET_CATEGORIES_OPERATION_ID,
@@ -24,6 +25,7 @@ router = APIRouter()
     tags=TAGS,
     operation_id=GET_CATEGORIES_OPERATION_ID,
     response_model=models.CategoriesListResponse,
+    responses=responses.responses_descriptions,
 )
 def get_categories(
     active: bool = True,
@@ -63,6 +65,7 @@ def get_categories(
     tags=TAGS,
     operation_id=GET_CATEGORY_SERVICES_OPERATION_ID,
     response_model=models.CategoryServicesListResponse,
+    responses=responses.responses_descriptions,
 )
 def get_category_services(  # pylint: disable=R0913
     category_id: int,
